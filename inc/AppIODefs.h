@@ -18,20 +18,13 @@
 /*************** Examples ***********************/
 
 // *********** Port A ***********
+#define 	CAN_RX_BIT	PA11_CANRX_INIT
+#define 	CAN_TX_BIT	PA12_CANTX_INIT
 
 // *********** Port B ***********
 #define 	SERIAL_TX_INIT		SERIAL3_PB10_TX
 #define 	SERIAL_RX_INIT		SERIAL3_PB11_RX
 #define		SERIAL			SERIAL3
-
-#define		MEM_CS_INIT		PB12_SPI2NSS
-#define		MEM_CK_INIT		PB13_SPI2CK
-#define		MEM_MISO_INIT		PB14_SPI2MISO
-#define		MEM_MOSI_INIT		PB15_SPI2MOSI
-#define 	MEM_SPI			SPI2
-
-#define		MEM_CS			PB12
-
 // ******* UART direct or buffered *******
 
 #define UART_BUFFERED

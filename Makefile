@@ -26,7 +26,7 @@ RM = -rm -f
 #=============================================================================#
 
 # project name
-PROJECT = BluePill_SPI_Memory
+PROJECT = BluePillCAN
 
 # core type
 PLATFORM = Platform_F103
