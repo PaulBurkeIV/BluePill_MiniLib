@@ -18,17 +18,17 @@
 /*************** Examples ***********************/
 
 // *********** Port A ***********
-#define 	SERVO1_IO		PA0_TIM2CH1_O
-#define 	SERVO2_IO		PA1_TIM2CH2_O
-#define 	SERVO3_IO		PA2_TIM2CH3_O
-#define 	SERVO4_IO		PA3_TIM2CH4_O
-#define 	SERVO_PWM		TIM2
-#define 	SERVO1			SERVO_PWM,1
-#define 	SERVO2			SERVO_PWM,2
-#define 	SERVO3			SERVO_PWM,3
-#define 	SERVO4			SERVO_PWM,4
+#define 	PWM_1_IO			PA8_TIM1CH1_O
+#define 	PWM_2_IO			PA9_TIM1CH2_O
+#define 	PWM_3_IO			PA10_TIM1CH3_O
+#define 	PWM_4_IO			PA11_TIM1CH4_O
+#define 	PWM_TIM			TIM1
+#define 	PWM_1			PWM_TIM,1
+#define 	PWM_2			PWM_TIM,2
+#define 	PWM_3			PWM_TIM,3
+#define 	PWM_4			PWM_TIM,4
 
-#define 	NSERVOS			4
+#define 	N_PROFPWMS		4
 
 
 // *********** Port B ***********
