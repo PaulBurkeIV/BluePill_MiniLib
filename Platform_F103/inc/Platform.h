@@ -30,6 +30,7 @@ typedef struct
 #include "Platform_SPI.h"
 #include "Platform_CAN.h"
 #include "Platform_EVTIM.h"
+#include "Platform_QENC.h"
 
 #define _WEAK __attribute__((weak))
 
