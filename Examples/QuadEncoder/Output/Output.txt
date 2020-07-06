@@ -1,0 +1,2 @@
+When you compile, you should get the example file outputs in this folder. 
+You can program the Blue Pill either via ST-Link or serial, with either the .bin or the .hex file.
