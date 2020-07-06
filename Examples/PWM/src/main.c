@@ -1,17 +1,17 @@
 /*****************************************************************************************
  *
- * This example sets up TIM2 to output servo controls on pins A0 - A3.
- * Each channel has a minimum value of 1ms, maximum 2ms, and a power- up vale of 1.5ms.
+ * This example sets up TIM2 to output 20kHz motor controls on pins A8 - A11.
+ * Each channel has a minimum value of 0 (0%), maximum 1000 (100%), and a power- up vale of 0.
  * The PWM_RATE factor is left at the default value of 8. This controls the scaling
  * of the servo move speed. A rate of 1 will add or subtract 1/(2^8) or 1/256
  * to the position each update.
  * In this case, the servo is updated every millisecond using the SysTickHook(),
- * so it will take 256 seconds to travel from minimum to maximum at a rate of 1,
+ * so it will take 256 seconds to acceleratel from minimum to maximum at a rate of 1,
  * or 25.6 seconds at rate 10 etc.
- * Servo channels are 0 (A0) to 3 (A3).
+ * Servo channels are 0 (A8) to 3 (A11).
  *
  * pos <chann> <postion> <rate>
- * e.g. pos 1 1850 100
+ * e.g. motor 0
  *
  * Halt a movement using e.g.
  * halt 0
@@ -83,8 +83,8 @@ ProfPWM_ChannelInit(1, PWM_TIM, 2, 0, 1000, 0, false);
 ProfPWM_ChannelInit(2, PWM_TIM, 3, 0, 1000, 0, false);
 ProfPWM_ChannelInit(3, PWM_TIM, 4, 0, 1000, 0, false);
 
-printf("Blue Pill motor PWM_ demo startedWriteIOVect");
-CmdBuffIndex = 0;		// Reinitialise for next input
+printf("Blue Pill motor PWM_ demo started\r\n");
+CmdBuffIndex = 0;
 CmdBuff[0] = 0;
 puts(">");
 
@@ -117,7 +117,7 @@ if(chrdy())		// Command input
   {
   case '\r':
 	      CmdBuff[CmdBuffIndex] = 0;	// Terminate the input
-	      puts("WriteIOVect");
+	      puts("\r\n");
 	      ParseCommand(CmdBuff);			// Do command
 	      CmdBuffIndex = 0;		// Reinitialise for next input
 	      CmdBuff[0] = 0;
@@ -139,7 +139,7 @@ if(chrdy())		// Command input
 	      break;
   default:
 	      CmdBuff[CmdBuffIndex] = 0;	// Terminate the input
-	      puts("WriteIOVect>");
+	      puts("\r\n>");
 	      CmdBuffIndex = 0;		// Reinitialise for next input
 	      CmdBuff[0] = 0;
 	      puts(">");
@@ -201,7 +201,7 @@ if(StringMatchNC(cmd, "pwm"))
  CmdBuff += strlen("pwm");
  if( sscanf(CmdBuff, "%1u%u%u", &v1, &v2, &v3) < 3)
   return;
- printf( "pwm %u -> %u at %uWriteIOVect", v1, v2, v3);
+ printf( "pwm %u -> %u at %u\r\n", v1, v2, v3);
  ProfPWM_Set(v1, v2, v3);
  }
 else if(StringMatchNC(cmd, "halt"))
@@ -209,7 +209,7 @@ else if(StringMatchNC(cmd, "halt"))
  CmdBuff += strlen("halt");
  if( sscanf(CmdBuff, "%1u", &v1) < 1)
   return;
- ProfPWM_Halt(v1, ProfPWM_Read(v1));
+ ProfPWM_Halt(v1,0);
  }
 
 }

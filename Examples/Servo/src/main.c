@@ -86,7 +86,7 @@ ProfPWM_ChannelInit(1, SERVO2, 1000, 2000, 1500, false);
 ProfPWM_ChannelInit(2, SERVO3, 1000, 2000, 1500, false);
 ProfPWM_ChannelInit(3, SERVO4, 1000, 2000, 1500, false);
 
-printf("Blue Pill Servo demo startedWriteIOVect");
+printf("Blue Pill Servo demo started\r\n");
 CmdBuffIndex = 0;		// Reinitialise for next input
 CmdBuff[0] = 0;
 puts(">");
@@ -120,7 +120,7 @@ if(chrdy())		// Command input
   {
   case '\r':
 	      CmdBuff[CmdBuffIndex] = 0;	// Terminate the input
-	      puts("WriteIOVect");
+	      puts("\r\n");
 	      ParseCommand(CmdBuff);			// Do command
 	      CmdBuffIndex = 0;		// Reinitialise for next input
 	      CmdBuff[0] = 0;
@@ -142,7 +142,7 @@ if(chrdy())		// Command input
 	      break;
   default:
 	      CmdBuff[CmdBuffIndex] = 0;	// Terminate the input
-	      puts("WriteIOVect>");
+	      puts("\r\n>");
 	      CmdBuffIndex = 0;		// Reinitialise for next input
 	      CmdBuff[0] = 0;
 	      puts(">");
@@ -204,7 +204,7 @@ if(StringMatchNC(cmd, "pos"))
  CmdBuff += strlen("pos");
  if( sscanf(CmdBuff, "%1u%u%u", &v1, &v2, &v3) < 3)
   return;
- printf( "Servo %u -> %u at %uWriteIOVect", v1, v2, v3);
+ printf( "Servo %u -> %u at %u\r\n", v1, v2, v3);
  ProfPWM_Set(v1, v2, v3);
  }
 else if(StringMatchNC(cmd, "halt"))

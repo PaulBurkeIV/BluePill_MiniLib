@@ -16,7 +16,7 @@
 uint32_t BlinkTime = 499;
 
 const uint8_t MemClr[1024] = {0};
-const uint8_t MemTstMsg[] = "O for a muse of fire, that would ascend the brightest heaven of invention! A kingdom for a stage, princes to act etc etcWriteIOVect";
+const uint8_t MemTstMsg[] = "O for a muse of fire, that would ascend the brightest heaven of invention! A kingdom for a stage, princes to act etc etc\r\n";
 uint8_t spibuff[128];
 
 #define CMDBUFSZ 32
@@ -56,7 +56,7 @@ InitIOBit(MEM_MISO_INIT);
 InitIOBit(MEM_MOSI_INIT);
 SPI_Init(MEM_SPI);
 
-printf("Blue Pill SPI Memory Demo startedWriteIOVect");
+printf("Blue Pill SPI Memory Demo started\r\n");
 
 while(1) // Equivalent to Arduino "loop"
  {
@@ -82,7 +82,7 @@ if(chrdy())		// Command input
   {
   case '\r':
 	      CmdBuff[CmdBuffIndex] = 0;	// Terminate the input
-	      puts("WriteIOVect");
+	      puts("\r\n");
 	      ParseCommand(CmdBuff);			// Do command
 	      CmdBuffIndex = 0;		// Reinitialise for next input
 	      CmdBuff[0] = 0;
@@ -104,7 +104,7 @@ if(chrdy())		// Command input
 	      break;
   default:
 	      CmdBuff[CmdBuffIndex] = 0;	// Terminate the input
-	      puts("WriteIOVect>");
+	      puts("\r\n>");
 	      CmdBuffIndex = 0;		// Reinitialise for next input
 	      CmdBuff[0] = 0;
 	      puts(">");
@@ -169,9 +169,9 @@ if(StringMatchNC(cmd, "mem"))
    Read25LCxx(MEM_SPI, MEM_CS, spibuff, i, 16);
    for(uint16_t j=0; j<16; j++)
     {
-    printf( "%02x%s", spibuff[j], (j%16 == 15) ? "WriteIOVect" : " ");
+    printf( "%02x%s", spibuff[j], (j%16 == 15) ? "\r\n" : " ");
     }
-   printf( "WriteIOVect");
+   printf( "\r\n");
    WaitTicks(6);
    if(chrdy())
     {
@@ -179,7 +179,7 @@ if(StringMatchNC(cmd, "mem"))
      break;
     }
    }
-  printf( "WriteIOVect");
+  printf( "\r\n");
   }
  else if(StringMatchNC(sub, "clr"))
   {
@@ -197,7 +197,7 @@ if(StringMatchNC(cmd, "mem"))
   }
  else if( StringMatchNC(sub, "write"))
   {
-  printf( "Writing %08x to %04xWriteIOVect", V2, V1);
+  printf( "Writing %08x to %04x\r\n", V2, V1);
   Write25LCxx(MEM_SPI, MEM_CS, &V2, V1, 4);
   }
  }

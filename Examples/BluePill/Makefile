@@ -26,7 +26,7 @@ RM = -rm -f
 #=============================================================================#
 
 # project name
-PROJECT = BluePillCAN
+PROJECT = BluePill
 
 # core type
 PLATFORM = Platform_F103

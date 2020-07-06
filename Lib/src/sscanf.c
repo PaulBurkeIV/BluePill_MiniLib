@@ -333,7 +333,7 @@ CVT:
 	case T_DOUBLE:
 	  {
 	    double base = 10.0;
-	    //iprintf( "Scanning float %sWriteIOVect", ip);
+	    //iprintf( "Scanning float %s\r\n", ip);
 	    // %f ignores field width
 	    for (i = 0;;)
 	      {

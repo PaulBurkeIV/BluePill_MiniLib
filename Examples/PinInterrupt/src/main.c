@@ -45,7 +45,7 @@ InitIOBit(SERIAL_RX_INIT);
 InitUART(SERIAL, 115200, DATA_8N1);
 
 
-printf("Blue Pill Pin Interrupt demo startedWriteIOVect");
+printf("Blue Pill Pin Interrupt demo started\r\n");
 
 while(1) // Equivalent to Arduino "loop"
  {
@@ -63,6 +63,6 @@ void PinInterrupt(uint8_t Line)
 {
 uint32_t ms = MilliSeconds();
 IOPinIRQDisable(INTERRUPT_PIN);
-printf( "Pin Interrupt at %dmsWriteIOVect", ms);
+printf( "Pin Interrupt at %dms\r\n", ms);
 }
 

@@ -1,3 +1,10 @@
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ * ADC Example
+ *
+ * This demo sets up PA0 as input to ADC1 (at 3.3V level).
+ * A simple low- pass filter is applied - tc ~250ms
+ * The outputs are displayed in decimal on the serial port (UART3)
+ *  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
 #include <stdbool.h>
@@ -54,7 +61,7 @@ LPFAcc = 0;
 StartADC(POT);
 
 
-printf("Blue Pill ADC example startedWriteIOVect");
+printf("Blue Pill ADC example started\r\n");
 
 while(1) // Equivalent to Arduino "loop"
  {
@@ -62,7 +69,7 @@ while(1) // Equivalent to Arduino "loop"
   {
   t = MilliSeconds();
   WriteIOBit(GREEN_LED, !ReadIOBit(GREEN_LED));
-  printf( "ADC raw %d LP fitered %dWriteIOVect", ADCRaw, ADCFitered);
+  printf( "ADC raw %d LP fitered %d\r\n", ADCRaw, ADCFitered);
   }
  }
 return 0;
@@ -80,7 +87,7 @@ if(ADCRdy(POT_ADC))
 
 uint16_t LPF(uint16_t v)
 {
-LPFAcc = LPFAcc - (LPFAcc >> 6) + v;
-return LPFAcc >> 6;
+LPFAcc = LPFAcc - (LPFAcc >> 8) + v;
+return LPFAcc >> 8;
 }
 

@@ -46,7 +46,7 @@ InitIOBit(CAN_RX_BIT);
 InitIOBit(CAN_TX_BIT);
 InitCAN();
 
-printf("Blue Pill CAN demo startedWriteIOVect");
+printf("Blue Pill CAN demo started\r\n");
 
 while(1) // Equivalent to Arduino "loop"
  {
@@ -59,7 +59,7 @@ while(1) // Equivalent to Arduino "loop"
    {
    printf( "%02x", CANRxMsg->Data[i]);
    }
-  printf( "WriteIOVect");
+  printf( "\r\n");
   }
 
 if( chrdy())

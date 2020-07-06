@@ -57,7 +57,7 @@ MCP23S17_Init (KBD_SPI, MCP23S17);
 // Initialise the MCP23S17 port for the
 InitKeyPad();
 
-printf("Ext IO Keypad Demo startedWriteIOVect");
+printf("Ext IO Keypad Demo started\r\n");
 
 while(1) // Equivalent to Arduino "loop"
  {
@@ -66,11 +66,11 @@ while(1) // Equivalent to Arduino "loop"
   {
   if( kp < 10)
    {
-   printf( "Key %dWriteIOVect", kp);
+   printf( "Key %d\r\n", kp);
    }
   else
    {
-   printf( "Key '%c'WriteIOVect", kp);
+   printf( "Key '%c'\r\n", kp);
    }
   }
 
