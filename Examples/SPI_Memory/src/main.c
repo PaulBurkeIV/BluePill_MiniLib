@@ -1,3 +1,11 @@
+/**************************************************************************
+ * This example uses SPI2 to read and write a 25LC256 memory
+ * Controlled by UART3.
+ * mem dump <start> <size> shows <size> bytes from <start>
+ * mem write <addr> <va> writes <val> at <addr>
+ * mem clr <start> <size> writes zeroes to <size> bytes starting at <start>
+ * mem fill <start> <size> writes 0xff to <size> bytes starting at <start>
+ **************************************************************************/
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
 #include <stdbool.h>

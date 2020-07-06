@@ -1,3 +1,9 @@
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ * Pin interrupt Example
+ *
+ * This demo sets up PA8 to raise an interrupt on falling edge.
+ * The value of the millisecond timer is displayed via UART3.
+ *  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
 #include <stdbool.h>

@@ -1,3 +1,11 @@
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ * CAN Example
+ *
+ * This demo sets up PA11/12 as a CAN port at 125kb/s.
+ * Anything received on the CAN port is displayed via UART3.
+ * Press any key to send an extended CAN message, ID 0x55, 4
+ * data bytes (being the value of the milisecond timer)
+ *  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
 #include <stdbool.h>
