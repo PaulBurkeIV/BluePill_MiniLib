@@ -139,20 +139,20 @@ return ClockSpeed;
 }
 
 
-void InituSCounter(void)
-{
-uint32_t ClockSpeed = InitTimerClock(TIM_uS);
-
-TIM_uS->ARR = 0xffff;
-TIM_uS->PSC = (ClockSpeed % 1000000)-1; // Gives 1MHz counter
-TIM_uS->CCMR1 = 0x01;	//input capture
-TIM_uS->SR &= ~0x22; // Clear status bits
-TIM_uS->EGR |= 2;		//Enable CCR1 capture event
-TIM_uS->CCER |= 1;	//Enable CCR1
-TIM_uS->CR1 |= TIM_CR1_CEN;
-}
-
-uint16_t ReaduSCounter(void)
-{
-return TIM_uS->CNT;
-}
+//void InituSCounter(void)
+//{
+//uint32_t ClockSpeed = InitTimerClock(TIM_uS);
+//
+//TIM_uS->ARR = 0xffff;
+//TIM_uS->PSC = (ClockSpeed % 1000000)-1; // Gives 1MHz counter
+//TIM_uS->CCMR1 = 0x01;	//input capture
+//TIM_uS->SR &= ~0x22; // Clear status bits
+//TIM_uS->EGR |= 2;		//Enable CCR1 capture event
+//TIM_uS->CCER |= 1;	//Enable CCR1
+//TIM_uS->CR1 |= TIM_CR1_CEN;
+//}
+//
+//uint16_t ReaduSCounter(void)
+//{
+//return TIM_uS->CNT;
+//}

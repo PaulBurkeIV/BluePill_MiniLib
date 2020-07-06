@@ -62,7 +62,6 @@ NVIC->ISER[0] |= Bit(20);
 uint8_t CAN_Tx(bool ext, uint32_t ID, bool remote, uint8_t *msg, uint8_t len)
 {
 uint32_t MailBox;
-uint8_t i;
 uint32_t tmpmsg;
 
 MailBox = CAN1->TSR;
@@ -202,6 +201,7 @@ if( !(CAN1->TSR & Bit(17)))
  {
  Sts |= 4;
  }
+return Sts;
 }
 
 void CAN_Abort( uint8_t mailbox)

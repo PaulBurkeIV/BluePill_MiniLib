@@ -23,7 +23,7 @@
 uint32_t BlinkTime = 499;
 
 const uint8_t MemClr[1024] = {0};
-const uint8_t MemTstMsg[] = "O for a muse of fire, that would ascend the brightest heaven of invention! A kingdom for a stage, princes to act etc etc\r\n";
+const uint8_t MemTstMsg[] = "O for a muse of fire, that would ascend the brightest heaven of invention! A kingdom for a stage, princes to act etc etcWriteIOVect";
 uint8_t spibuff[128];
 
 #define CMDBUFSZ 32
@@ -73,21 +73,6 @@ InitUART(SERIAL, 115200, DATA_8N1);
 //InitIOBit(CLOCK_OUT);
 //void InitClockOutput(MCO_SYS);
 
-// Initialise PWM on TIM1
-// 20kHz (ish - actually about 23.5kHz, 10 bit resolution)
-// e.g. "Silent DCC" PWM
-
-//InitIOBit(MOTOR1_IO);
-InitIOBit(MOTOR2_IO);
-InitIOBit(MOTOR3_IO);
-//InitIOBit(MOTOR4_IO); // Clashes with CAN
-
-InitPWMTimebase(MOTOR_PWM, 20000, 1024);
-//InitPWMChannel(MOTOR1, 0, false);
-InitPWMChannel(MOTOR2, 0, false);
-InitPWMChannel(MOTOR3, 0, false);
-//InitPWMChannel(MOTOR4, 0, false);
-PWM_Start(MOTOR_PWM);
 
 
 //
@@ -120,16 +105,12 @@ MCP23S17_Init (MCP23S17);
 ////InitPWMChannel(SERVO4, 10000, false);
 //PWM_Start(SERVO_PWM);
 
-ProfPWM_PinInit(SERVO3_IO);
-ProfPWM_BaseInit(SERVO_PWM, 50, 20000);
-ProfPWM_ChannelInit(SERVO3, 1000, 2000, 1500, false);
-ProfPWM_Start(SERVO_PWM);
 
 InitIOBit(PA11_CANRX_INIT);
 InitIOBit(PA12_CANTX_INIT);
 InitCAN();
 
-printf("Blue Pill started\r\n");
+printf("Blue Pill startedWriteIOVect");
 
 while(1) // Equivalent to Arduino "loop"
  {
@@ -141,7 +122,7 @@ while(1) // Equivalent to Arduino "loop"
    {
    printf( "%02x", CANRxMsg->Data[i]);
    }
-  puts( "\r\n");
+  puts( "WriteIOVect");
   }
 
  DoSerialIn();
@@ -149,8 +130,7 @@ while(1) // Equivalent to Arduino "loop"
  if( (MilliSeconds()-t) > BlinkTime)
   {
   t = MilliSeconds();
-//  WriteIOBit(GREEN_LED, !ReadIOBit(GREEN_LED));
-  printf( "Servo 3 %d\r\n", ProfPWM_Read(3));
+  WriteIOBit(GREEN_LED, !ReadIOBit(GREEN_LED));
   }
  }
 return 0;
@@ -159,7 +139,6 @@ return 0;
 void SysTickHook(void)
 {
 WriteIOBit(GREEN_LED, !ReadIOBit(GREEN_LED));
-PositionServo();
 }
 
 void DoSerialIn(void)
@@ -173,7 +152,7 @@ if(chrdy())		// Command input
   {
   case '\r':
 	      CmdBuff[CmdBuffIndex] = 0;	// Terminate the input
-	      puts("\r\n");
+	      puts("WriteIOVect");
 	      ParseCommand(CmdBuff);			// Do command
 	      CmdBuffIndex = 0;		// Reinitialise for next input
 	      CmdBuff[0] = 0;
@@ -196,7 +175,7 @@ if(chrdy())		// Command input
 	      break;
   default:
 	      CmdBuff[CmdBuffIndex] = 0;	// Terminate the input
-	      puts("\r\n>");
+	      puts("WriteIOVect>");
 	      CmdBuffIndex = 0;		// Reinitialise for next input
 	      CmdBuff[0] = 0;
 	      puts(">");
@@ -270,7 +249,7 @@ if ( !sscanf(CmdBuff, "%s", cmd))
 
 if( StringMatchNC(cmd, "time"))
  {
- printf( "Time = %d\r\n", MilliSeconds());
+ printf( "Time = %dWriteIOVect", MilliSeconds());
  }
 if( StringMatchNC(cmd, "led"))
  {
@@ -278,7 +257,7 @@ if( StringMatchNC(cmd, "led"))
  if( !sscanf(CmdBuff, "%u", &v1))
   return;
  BlinkTime = v1;
- printf( "Blink = %u\r\n", BlinkTime);
+ printf( "Blink = %uWriteIOVect", BlinkTime);
  }
 else if(StringMatchNC(cmd, "Motor"))
  {
@@ -289,7 +268,7 @@ else if(StringMatchNC(cmd, "Motor"))
    {
    v2 = MOTOR_MAX;
    }
-  printf( "Motor %u -> %u\r\n", v1, v2);
+  printf( "Motor %u -> %uWriteIOVect", v1, v2);
   switch(v1)
    {
    case 1:
@@ -304,28 +283,6 @@ else if(StringMatchNC(cmd, "Motor"))
 //   case 4:
 //	  SetPWM(MOTOR4, v2);
 //	  break;
-   }
- }
-else if(StringMatchNC(cmd, "servo"))
- {
- CmdBuff += strlen("servo");
- if( sscanf(CmdBuff, "%1u%u", &v1, &v2) < 2)
-  return;
-  printf( "Servo %u -> %u\r\n", v1, v2);
-  switch(v1)
-   {
-   case 1:
-	  ProfPWM_Set(1, v1, v2);
-	  break;
-   case 2:
-	  ProfPWM_Set(2, v1, v2);
-	  break;
-   case 3:
-	  ProfPWM_Set(3, v1, v2);
-	  break;
-   case 4:
-	  ProfPWM_Set(4, v1, v2);
-	  break;
    }
  }
 else if(StringMatchNC(cmd, "lcxx"))
@@ -343,9 +300,9 @@ else if(StringMatchNC(cmd, "lcxx"))
     Read25LCxx(SPI2,PB12_SPI2NSS_PIN, spibuff, i, 16);
     for(uint16_t j=0; j<16; j++)
      {
-     printf( "%02x%s", spibuff[j], (j%16 == 15) ? "\r\n" : " ");
+     printf( "%02x%s", spibuff[j], (j%16 == 15) ? "WriteIOVect" : " ");
      }
-    printf( "\r\n");
+    printf( "WriteIOVect");
     WaitTicks(6);
     if(chrdy())
      {
@@ -353,7 +310,7 @@ else if(StringMatchNC(cmd, "lcxx"))
       break;
      }
    }
-  printf( "\r\n");
+  printf( "WriteIOVect");
   }
  else if(StringMatchNC(sub, "clr"))
   {
@@ -378,9 +335,10 @@ else if(StringMatchNC(cmd, "lcxx"))
 
 void PinInterrupt(uint8_t Line)
 {
-uint32_t ms = MilliSeconds();
+union {uint32_t i; uint8_t b[4];} ms;
+ms.i = MilliSeconds();
 //WriteIOBit(GREEN_LED, !ReadIOBit(GREEN_LED));
-CAN_Tx(true, 0x55, false,  &ms, 4);
+CAN_Tx(true, 0x55, false, ms.b, 4);
 }
 
 

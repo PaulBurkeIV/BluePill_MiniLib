@@ -9,11 +9,27 @@
 #include <stdbool.h>
 
 #include "stm32f10x.h"
+/************* Platform IO defs **********/
+// This is redefined from the version in stm32f10x.h
+// because that didn't include the Reserved word
+// so you can't treat the DMA channels as an array starting
+// at &DMA1_Channel1
+
+typedef struct
+{
+  __IO uint32_t CCR;
+  __IO uint32_t CNDTR;
+  __IO uint32_t CPAR;
+  __IO uint32_t CMAR;
+  __IO uint32_t Reserved;
+} t_DMA_Channel;
+
 #include "Platform_UART.h"
 #include "Platform_PWM.h"
 #include "Platform_ADC.h"
 #include "Platform_SPI.h"
 #include "Platform_CAN.h"
+#include "Platform_EVTIM.h"
 
 #define _WEAK __attribute__((weak))
 
@@ -26,7 +42,7 @@ extern uint32_t minram;
 extern uint32_t maxram;
 #define RAM_END (uint32_t)(&maxram)
 
-/************* Platform IO defs **********/
+// EXTI interrupt edges
 
 #define EXTIRQ_NONE	0
 #define EXTIRQ_RISING	1

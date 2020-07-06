@@ -26,7 +26,7 @@ RM = -rm -f
 #=============================================================================#
 
 # project name
-PROJECT = BluePillCAN
+PROJECT = BluePill_EventTimer
 
 # core type
 PLATFORM = Platform_F103
@@ -63,7 +63,7 @@ LIB_DIRS =
 
 # libraries (additional libraries for linking, e.g. "-lm -lsome_name" to link
 # math library libm.a and libsome_name.a)
-LIBS =
+LIBS = -lc
 
 # additional directories with source files (absolute or relative paths to
 # folders with source files, current folder is always included)
@@ -127,19 +127,19 @@ VPATH = $(SRC_DIRS)
 #=============================================================================#
 # when using output folder, append trailing slash to its name
 #=============================================================================#
-#
-#ifeq ($(strip $(OUT_DIR)), )
-#	OUT_DIR_F =
-#else
-#	OUT_DIR_F = $(strip $(OUT_DIR))/
-#endif
-#
-#
-#ifeq ($(strip $(IMAGE_DIR)), )
-#	IMAGE_DIR_F =
-#else
-#	IMAGE_DIR_F = $(strip $(IMAGE_DIR))/
-#endif
+
+ifeq ($(strip $(OUT_DIR)), )
+	OUT_DIR_F =
+else
+	OUT_DIR_F = $(strip $(OUT_DIR))/
+endif
+
+
+ifeq ($(strip $(IMAGE_DIR)), )
+	IMAGE_DIR_F =
+else
+	IMAGE_DIR_F = $(strip $(IMAGE_DIR))/
+endif
 
 #=============================================================================#
 # various compilation flags
@@ -298,9 +298,6 @@ print_size :
 #-----------------------------------------------------------------------------#
 
 make_output_dir :
-	@echo 'Making image directory'
-	$(shell mkdir $(IMAGE_DIR_F) 2>/dev/null) 
-	@echo 'Making output drectory'
 	$(shell mkdir $(OUT_DIR_F) 2>/dev/null)
 
 #=============================================================================#

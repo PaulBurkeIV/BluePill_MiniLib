@@ -30,7 +30,7 @@
 
 #define 	POT_IO			PA0_ADC
 #define		POT_ADC			ADC1
-#define		POT			ADC1_CH7
+#define		POT			ADC1_CH0
 
 #define 	CLOCK_OUT		PA8_MCO
 #define 	MOTOR1_IO		PA8_TIM1CH1_O

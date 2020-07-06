@@ -83,7 +83,7 @@ ProfPWM_ChannelInit(1, PWM_TIM, 2, 0, 1000, 0, false);
 ProfPWM_ChannelInit(2, PWM_TIM, 3, 0, 1000, 0, false);
 ProfPWM_ChannelInit(3, PWM_TIM, 4, 0, 1000, 0, false);
 
-printf("Blue Pill motor PWM_ demo started\r\n");
+printf("Blue Pill motor PWM_ demo startedWriteIOVect");
 CmdBuffIndex = 0;		// Reinitialise for next input
 CmdBuff[0] = 0;
 puts(">");
@@ -117,7 +117,7 @@ if(chrdy())		// Command input
   {
   case '\r':
 	      CmdBuff[CmdBuffIndex] = 0;	// Terminate the input
-	      puts("\r\n");
+	      puts("WriteIOVect");
 	      ParseCommand(CmdBuff);			// Do command
 	      CmdBuffIndex = 0;		// Reinitialise for next input
 	      CmdBuff[0] = 0;
@@ -139,7 +139,7 @@ if(chrdy())		// Command input
 	      break;
   default:
 	      CmdBuff[CmdBuffIndex] = 0;	// Terminate the input
-	      puts("\r\n>");
+	      puts("WriteIOVect>");
 	      CmdBuffIndex = 0;		// Reinitialise for next input
 	      CmdBuff[0] = 0;
 	      puts(">");
@@ -201,7 +201,7 @@ if(StringMatchNC(cmd, "pwm"))
  CmdBuff += strlen("pwm");
  if( sscanf(CmdBuff, "%1u%u%u", &v1, &v2, &v3) < 3)
   return;
- printf( "pwm %u -> %u at %u\r\n", v1, v2, v3);
+ printf( "pwm %u -> %u at %uWriteIOVect", v1, v2, v3);
  ProfPWM_Set(v1, v2, v3);
  }
 else if(StringMatchNC(cmd, "halt"))

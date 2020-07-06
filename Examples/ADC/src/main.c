@@ -18,6 +18,11 @@ uint32_t BlinkTime = 499;
 void DoSerialIn(void);
 void ParseCommand(uint8_t *CmdBuff);
 
+uint16_t ADCRaw;
+uint16_t ADCFitered;
+uint32_t LPFAcc;
+uint16_t LPF(uint16_t v);
+
 /************ Main ****************************************/
 //
 // The Raging main()
@@ -25,7 +30,6 @@ void ParseCommand(uint8_t *CmdBuff);
 
 int main(void)
 {
-uint32_t i;
 uint32_t t = 0;
 
 SystemInit();		// This sets up the 72MHz clock using the 8MHz crystal
@@ -46,10 +50,11 @@ InitUART(SERIAL, 115200, DATA_8N1);
 
 InitIOBit(POT_IO);
 ADCInit(POT_ADC);
+LPFAcc = 0;
 StartADC(POT);
 
 
-printf("Blue Pill ADC example started\r\n");
+printf("Blue Pill ADC example startedWriteIOVect");
 
 while(1) // Equivalent to Arduino "loop"
  {
@@ -57,14 +62,25 @@ while(1) // Equivalent to Arduino "loop"
   {
   t = MilliSeconds();
   WriteIOBit(GREEN_LED, !ReadIOBit(GREEN_LED));
-  if(ADCRdy(POT_ADC))
-   {
-   uint16_t v = ReadADC(POT_ADC);
-   printf( "ADC %d\r\n", v);
-   StartADC(POT);
-   }
+  printf( "ADC raw %d LP fitered %dWriteIOVect", ADCRaw, ADCFitered);
   }
  }
 return 0;
+}
+
+void SysTickHook(void)
+{
+if(ADCRdy(POT_ADC))
+ {
+ ADCRaw = ReadADC(POT_ADC);
+ ADCFitered = LPF(ADCRaw);
+ StartADC(POT);
+ }
+}
+
+uint16_t LPF(uint16_t v)
+{
+LPFAcc = LPFAcc - (LPFAcc >> 6) + v;
+return LPFAcc >> 6;
 }
 

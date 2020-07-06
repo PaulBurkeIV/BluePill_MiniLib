@@ -121,7 +121,7 @@ return UART->DR;
 // e.g. COMPort_Init( &COM1, 115200, "8N1");
 //
 
-// STM32F4xx pecific hardware init
+// STM32F1xx pecific hardware init
 
 #define RCC_APB2Periph_USART1 Bit(14)
 #define RCC_APB1Periph_USART2 Bit(17)
@@ -144,16 +144,8 @@ static uint8_t  COM2TxBuff[COM2_BUFF_SIZE];
 static uint8_t  COM3RxBuff[COM3_BUFF_SIZE];
 static uint8_t  COM3TxBuff[COM3_BUFF_SIZE];
 
-typedef struct
-{
-  __IO uint32_t CCR;
-  __IO uint32_t CNDTR;
-  __IO uint32_t CPAR;
-  __IO uint32_t CMAR;
-  __IO uint32_t Reserved;
-} t_DMA1_Channel;
+const t_DMA_Channel *DMA1Channel =  (t_DMA_Channel *)DMA1_Channel1;
 
-const t_DMA1_Channel *DMA1Channel =  (t_DMA1_Channel *)DMA1_Channel1;
 #define RCC_AHBPeriph_DMA1 Bit(0)
 
 #define CHAN(x) ((x)-1) // Because numbers start from 1, array from 0
@@ -268,7 +260,7 @@ UART->CR1 |= Bit(7);
 void InitUART(USART_TypeDef *UART, uint32_t BaudRate, uint16_t Format)
 {
 uint32_t IRQBit;
-t_DMA1_Channel *DMA_Channel = 0;
+t_DMA_Channel *DMA_Channel = 0;
 uint32_t ClockSpeed = APB2CLKSPEED;
 t_sCOMPort *COMPort;
 
@@ -393,7 +385,7 @@ return COMPort;
 uint16_t UART_RxRdy(USART_TypeDef *UART)
 {
 t_sCOMPort * COMPort = GetCOMStruct(UART);
-t_DMA1_Channel *DMA_Channel = 0;
+t_DMA_Channel *DMA_Channel = 0;
 
 switch( (uint32_t)UART)
  {

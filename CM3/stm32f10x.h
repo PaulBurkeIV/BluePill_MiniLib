@@ -50,8 +50,6 @@
 #ifndef __STM32F10x_H
 #define __STM32F10x_H
 
-#include <stdint.h>
-
 #ifndef  assert_param
   #define assert_param(expr) ((void)0)
 #endif
@@ -71,7 +69,7 @@
 #if !defined (STM32F10X_LD) && !defined (STM32F10X_LD_VL) && !defined (STM32F10X_MD) && !defined (STM32F10X_MD_VL) && !defined (STM32F10X_HD) && !defined (STM32F10X_HD_VL) && !defined (STM32F10X_XL) && !defined (STM32F10X_CL) 
   /* #define STM32F10X_LD */     /*!< STM32F10X_LD: STM32 Low density devices */
   /* #define STM32F10X_LD_VL */  /*!< STM32F10X_LD_VL: STM32 Low density Value Line devices */  
- #define STM32F10X_MD      /*!< STM32F10X_MD: STM32 Medium density devices */
+  /* #define STM32F10X_MD */     /*!< STM32F10X_MD: STM32 Medium density devices */
   /* #define STM32F10X_MD_VL */  /*!< STM32F10X_MD_VL: STM32 Medium density Value Line devices */  
   /* #define STM32F10X_HD */     /*!< STM32F10X_HD: STM32 High density devices */
   /* #define STM32F10X_HD_VL */  /*!< STM32F10X_HD_VL: STM32 High density value line devices */  

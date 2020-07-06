@@ -38,27 +38,17 @@
 #define CH3INV Bit(9)
 #define CH4INV Bit(13)
 
-void PWM_Start(TIM_TypeDef *TIM)
-{
-TIM->CR1 |= ENABLE;
-TIM->EGR |=  UG;
-}
-
-void PWM_Stop(TIM_TypeDef *TIM)
-{
-TIM->CR1 &= !ENABLE;
-}
-
 void InitPWMTimebase(TIM_TypeDef *TIM, uint32_t Frequency, uint32_t Resolution)
 {
 uint32_t ClockSpeed;
 if( !(ClockSpeed = InitTimerClock(TIM)))
  return;
 
+TIM->CR1 &= ~ENABLE;
 TIM->PSC = ClockSpeed/(Frequency*Resolution)-1;
 TIM->ARR = Resolution-1;
 TIM->BDTR |= Bit(15);		// Only needed for TIM1
-PWM_Start(TIM);
+TIM->CR1 |= ENABLE;
 }
 
 void InitPWMChannel(TIM_TypeDef *TIM, uint8_t Channel, uint16_t InitValue, bool Inverted)

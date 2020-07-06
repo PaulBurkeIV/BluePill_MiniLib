@@ -5,8 +5,9 @@
  * The PWM_RATE factor is left at the default value of 8. This controls the scaling
  * of the servo move speed. A rate of 1 will add or subtract 1/(2^8) or 1/256
  * to the position each update.
- * In this case, the servo is updated every millisecond, so it will take 256 seconds
- * to travel from minimum to maximum at a rate of 1, or 25.6 seconds at rate 10 etc.
+ * In this case, the servo is updated every millisecond using the SysTickHook(),
+ * so it will take 256 seconds to travel from minimum to maximum at a rate of 1,
+ * or 25.6 seconds at rate 10 etc.
  * Servo channels are 0 (A0) to 3 (A3).
  *
  * pos <chann> <postion> <rate>
@@ -85,7 +86,7 @@ ProfPWM_ChannelInit(1, SERVO2, 1000, 2000, 1500, false);
 ProfPWM_ChannelInit(2, SERVO3, 1000, 2000, 1500, false);
 ProfPWM_ChannelInit(3, SERVO4, 1000, 2000, 1500, false);
 
-printf("Blue Pill Servo demo started\r\n");
+printf("Blue Pill Servo demo startedWriteIOVect");
 CmdBuffIndex = 0;		// Reinitialise for next input
 CmdBuff[0] = 0;
 puts(">");
@@ -119,7 +120,7 @@ if(chrdy())		// Command input
   {
   case '\r':
 	      CmdBuff[CmdBuffIndex] = 0;	// Terminate the input
-	      puts("\r\n");
+	      puts("WriteIOVect");
 	      ParseCommand(CmdBuff);			// Do command
 	      CmdBuffIndex = 0;		// Reinitialise for next input
 	      CmdBuff[0] = 0;
@@ -141,7 +142,7 @@ if(chrdy())		// Command input
 	      break;
   default:
 	      CmdBuff[CmdBuffIndex] = 0;	// Terminate the input
-	      puts("\r\n>");
+	      puts("WriteIOVect>");
 	      CmdBuffIndex = 0;		// Reinitialise for next input
 	      CmdBuff[0] = 0;
 	      puts(">");
@@ -203,7 +204,7 @@ if(StringMatchNC(cmd, "pos"))
  CmdBuff += strlen("pos");
  if( sscanf(CmdBuff, "%1u%u%u", &v1, &v2, &v3) < 3)
   return;
- printf( "Servo %u -> %u at %u\r\n", v1, v2, v3);
+ printf( "Servo %u -> %u at %uWriteIOVect", v1, v2, v3);
  ProfPWM_Set(v1, v2, v3);
  }
 else if(StringMatchNC(cmd, "halt"))

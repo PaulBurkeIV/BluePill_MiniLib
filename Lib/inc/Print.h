@@ -8,10 +8,10 @@
 #ifndef APPINC_PRINT_H_
 #define APPINC_PRINT_H_
 
-int mprintf(const char *format, ...);
-int uprintf(void *dst, const char *format, ...);
-int sprintf(char *str,const char *fmt, ...);
+uint32_t exprintf(const uint8_t *format, ...);
+uint32_t exuprintf(void *dst, const uint8_t *format, ...);
+uint32_t exsprintf(uint8_t *str,const uint8_t *fmt, ...);
 
-#define printf mprintf
+#define printf exprintf
 
 #endif /* APPINC_PRINT_H_ */

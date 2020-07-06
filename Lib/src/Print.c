@@ -16,12 +16,12 @@ IsRAM (uint32_t a)
 /******************Printing*************/
 
 static void
-printchar (void *out, char c)
+printchar (void *out, uint8_t c)
 {
   if (IsRAM ((uint32_t) out))
     {
 
-      char **dst = out;
+      uint8_t **dst = out;
       **dst = c;
       (*dst)++;
     }
@@ -35,15 +35,15 @@ printchar (void *out, char c)
 #define PAD_RIGHT 1
 #define PAD_ZERO 2
 
-static int
-prints (void *out, const char *string, int width, int pad)
+static uint32_t
+prints (void *out, const uint8_t *string, uint32_t width, uint32_t pad)
 {
-  int pc = 0, padchar = ' ';
+  uint32_t pc = 0, padchar = ' ';
 
   if (width > 0)
     {
-      int len = 0;
-      const char *ptr;
+      uint32_t len = 0;
+      const uint8_t *ptr;
       for (ptr = string; *ptr; ++ptr)
 	++len;
       if (len >= width)
@@ -75,16 +75,16 @@ prints (void *out, const char *string, int width, int pad)
   return pc;
 }
 
-/* the following should be enough for 64 bit int */
+/* the following should be enough for 64 bit uint32_t */
 #define PRINT_BUF_LEN 32
 
-static int
-printi (void *out, int i, int b, int sg, int width, int pad, int letbase)
+static uint32_t
+printi (void *out, int32_t i, uint32_t b, uint32_t sg, uint32_t width, uint32_t pad, uint32_t letbase)
 {
-  char print_buf[PRINT_BUF_LEN];
-  char *s;
-  int t, neg = 0, pc = 0;
-  unsigned int u = i;
+  uint8_t print_buf[PRINT_BUF_LEN];
+  uint8_t *s;
+  uint32_t t, neg = 0, pc = 0;
+  int32_t u = i;
 
   if (i == 0)
     {
@@ -128,15 +128,23 @@ printi (void *out, int i, int b, int sg, int width, int pad, int letbase)
   return pc + prints (out, s, width, pad);
 }
 
-int
-xprint (void *out, bool term, int *varg)
-{
-  int width, pad;
-  int pwidth;
+  uint32_t ArrayStart;
+  uint32_t ArraySz;
+enum {EL_32, EL_16, EL_8};
 
-  int pc = 0;
-  char *format = (char*) (*varg++);
-  char scr[2];
+uint32_t
+xprint (void *out, bool term, uint32_t *varg)
+{
+  uint32_t width, pad;
+  uint32_t pwidth;
+  bool PrintArray = false;
+  uint32_t ArrayStart = 0;
+  uint8_t ArrayElSz = EL_32;
+//  uint32_t ArraySz = 0;
+  uint8_t ArraySep = 0;
+  uint32_t pc = 0;
+  uint8_t *format = (uint8_t*) (*varg++);
+  uint8_t scr[2];
 
   for (; *format != 0; ++format)
     {
@@ -148,6 +156,46 @@ xprint (void *out, bool term, int *varg)
 	    break;
 	  if (*format == '%')
 	    goto out;
+	  if(*format == '[')
+	   {
+	   ++format;
+	   PrintArray = true; // signal that it's an array
+	   if( *format == 's')
+	    {
+	    ArrayElSz = EL_16;
+	    format++;
+	    }
+	   else if( *format == 'c')
+	    {
+	    ArrayElSz = EL_8;
+	    format++;
+	    }
+//	   if( (*format >= '0') && (*format <= '9')) //Array definition in string  in format [x,y
+//	    {
+//	    for (; *format >= '0' && *format <= '9'; ++format)
+//	     {
+//	      ArrayStart *= 10;
+//	      ArrayStart += *format - '0';
+//	     }
+//	    ArraySep = *format; // Next character is array separator
+//	    ++format;
+//	    for (; *format >= '0' && *format <= '9'; ++format)
+//	     {
+//	      ArraySz *= 10;
+//	      ArraySz += *format - '0';
+//	     }
+//	    }
+//	   else	//Array definition in parameters
+//	    {
+ 	    ArrayStart = *varg++;
+ 	    ArraySz = *varg++;
+	    ArraySep = *format++;
+//	    }
+	   }
+	  else
+	   {
+	   PrintArray = false;
+	   }
 	  if (*format == '-')
 	    {
 	      ++format;
@@ -163,6 +211,7 @@ xprint (void *out, bool term, int *varg)
 	      width *= 10;
 	      width += *format - '0';
 	    }
+#ifdef PRINTF_FLOAT
 	  // do prec
 	  if (*format == '.')
 	    {
@@ -178,32 +227,93 @@ xprint (void *out, bool term, int *varg)
 		  pwidth += *format - '0';
 		}
 	    }
+#endif
 	  if (*format == 's')
 	    {
-	      char *s = *((char**) varg++);
-	      pc += prints (out, s ? s : "(null)", width, pad);
+	      uint8_t *s = *((uint8_t**) varg++);
+	      pc += prints (out, s ? s : (uint8_t *)"(null)", width, pad);
 	      continue;
 	    }
-	  if (*format == 'd')
+	  if ( (*format == 'd') || (*format == 'x') || (*format == 'X') || (*format == 'u'))
 	    {
-	      pc += printi (out, *varg++, 10, 1, width, pad, 'a');
+	      if( !PrintArray)
+	       {
+	        if( *format == 'd')
+	         pc += printi (out, *varg++, 10, 1, width, pad, 'a');
+	        else if(*format == 'x')
+	         pc += printi (out, *varg++, 16, 0, width, pad, 'a');
+	        else if(*format == 'X')
+	         pc += printi (out, *varg++, 16, 0, width, pad, 'A');
+	        else if(*format == 'u')
+	         pc += printi (out, *varg++, 10, 0, width, pad, 'a');
+	       }
+	      else
+	       {
+ 	       uint32_t i;
+ 	       for(i=ArrayStart; i<(ArrayStart+ArraySz); i++)
+	        {
+	        if( ArrayElSz == EL_32)
+	         {
+	         uint32_t *v = (uint32_t *)*varg;
+	         if( i != ArrayStart)
+	          printchar (out, ArraySep);
+	         if( *format == 'd')
+	          pc += printi (out, v[i], 10, 1, width, pad, 'a');
+	         else if(*format == 'x')
+	          pc += printi (out, v[i], 16, 0, width, pad, 'a');
+	         else if(*format == 'X')
+	          pc += printi (out, v[i], 16, 0, width, pad, 'A');
+	         else if(*format == 'u')
+	          pc += printi (out, v[i], 10, 0, width, pad, 'a');
+	         }
+	        else if( ArrayElSz == EL_16)
+	         {
+	         uint16_t *v = (uint16_t *)*varg;
+	         if( i != ArrayStart)
+	          printchar (out, ArraySep);
+	         if( *format == 'd')
+	          pc += printi (out, v[i], 10, 1, width, pad, 'a');
+	         else if(*format == 'x')
+	          pc += printi (out, v[i], 16, 0, width, pad, 'a');
+	         else if(*format == 'X')
+	          pc += printi (out, v[i], 16, 0, width, pad, 'A');
+	         else if(*format == 'u')
+	          pc += printi (out, v[i], 10, 0, width, pad, 'a');
+	         }
+	        else if( ArrayElSz == EL_8)
+	         {
+	         uint8_t *v = (uint8_t *)*varg;
+	         if( i != ArrayStart)
+	          printchar (out, ArraySep);
+	         if( *format == 'd')
+	          pc += printi (out, v[i], 10, 1, width, pad, 'a');
+	         else if(*format == 'x')
+	          pc += printi (out, v[i], 16, 0, width, pad, 'a');
+	         else if(*format == 'X')
+	          pc += printi (out, v[i], 16, 0, width, pad, 'A');
+	         else if(*format == 'u')
+	          pc += printi (out, v[i], 10, 0, width, pad, 'a');
+	         }
+	        }
+	       varg++;
+	       }
 	      continue;
 	    }
-	  if (*format == 'x')
-	    {
-	      pc += printi (out, *varg++, 16, 0, width, pad, 'a');
-	      continue;
-	    }
-	  if (*format == 'X')
-	    {
-	      pc += printi (out, *varg++, 16, 0, width, pad, 'A');
-	      continue;
-	    }
-	  if (*format == 'u')
-	    {
-	      pc += printi (out, *varg++, 10, 0, width, pad, 'a');
-	      continue;
-	    }
+//	  if (*format == 'x')
+//	    {
+//	      pc += printi (out, *varg++, 16, 0, width, pad, 'a');
+//	      continue;
+//	    }
+//	  if (*format == 'X')
+//	    {
+//	      pc += printi (out, *varg++, 16, 0, width, pad, 'A');
+//	      continue;
+//	    }
+//	  if (*format == 'u')
+//	    {
+//	      pc += printi (out, *varg++, 10, 0, width, pad, 'a');
+//	      continue;
+//	    }
 #ifdef PRINTF_FLOAT
 	  if (*format == 'f')
 	    {
@@ -214,7 +324,7 @@ xprint (void *out, bool term, int *varg)
 	      int32_t IntNumber;
 
 	      // align for double
-	      varg = (int*) (((int) varg + 4) & ~7);
+	      varg = (uint32_t*) (((uint32_t) varg + 4) & ~7);
 
 	      fNumber = *((double*) varg);
 	      varg += 2;	// inc passed double
@@ -243,7 +353,7 @@ xprint (void *out, bool term, int *varg)
 #endif
 	  if (*format == 'c')
 	    {
-	      /* char are converted to int then pushed on the stack */
+	      /* uint8_t are converted to uint32_t then pushed on the stack */
 	      scr[0] = *varg++;
 	      scr[1] = '\0';
 	      pc += prints (out, scr, width, pad);
@@ -258,30 +368,30 @@ out:      printchar (out, *format);
     }
   if (term)
     {
-      **(char**) out = 0;
+      **(uint8_t**) out = 0;
     }
   return pc;
 }
 
-/* assuming sizeof(void *) == sizeof(int) */
+/* assuming sizeof(void *) == sizeof(uint32_t) */
 
-int
-mprintf (const char *format, ...)
+uint32_t
+exprintf (const uint8_t *format, ...)
 {
-  int *varg = (void*) (&format);
+  uint32_t *varg = (void*) (&format);
   return xprint ((void*) putchar, false, varg);
 }
 
-int
-uprintf (void *dst, const char *format, ...)
+uint32_t
+exuprintf (void *dst, const uint8_t *format, ...)
 {
-  int *varg = (int*) (&format);
+  uint32_t *varg = (uint32_t*) (&format);
   return xprint ((void*) dst, false, varg);
 }
 
-int
-sprintf (char *str, const char *fmt, ...)
+uint32_t
+exsprintf (uint8_t *str, const uint8_t *fmt, ...)
 {
-  int *varg = (int*) (&fmt);
+  uint32_t *varg = (uint32_t*) (&fmt);
   return xprint ((void*) &str, true, varg);
 }
